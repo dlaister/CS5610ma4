@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { v4: uuid } = require('uuid');
+const {v4: uuid} = require('uuid');
 
 // replace this string with your full name
 const name = "Derek Laister"
@@ -13,7 +13,7 @@ const myPokemon = [{
     id: "fc10b559-872c-43cd-bad2-f02e2e0a2d58", name: "Pikachu", health: 10, level: 1
 }];
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     // return all pokemon
 });
 
@@ -31,22 +31,60 @@ router.get('/:pokemonId', function (req, res) {
     // return a 404 if no pokemon matches that pokemonId
 });
 
-router.put('/:pokemonId', function(req, res) {
+router.put('/:pokemonId', function (req, res) {
     // update the pokemon matching the pokemonId
     // based on the req body
     // return a 404 if no pokemon matches that pokemonId  
 })
 
-router.delete('/:pokemonId', function(req, res) {
+router.delete('/:pokemonId', function (req, res) {
     // delete pokemon if pokemonId matches the id of one
     // return 200 even if no pokemon matches that Id
 })
 
 module.exports = router;
 
-// (/url here, function that you define here)
-app.post('/', function(request,response){
-    response.send("some text here")
+
+
+
+
+
+
+
+// router.{request here}(/url here, function that you define here)
+
+
+//id
+router.get('/:pokemonId', function (request, response) {
+    const Id = request.params.pokemonId;
+
+    const responsePokemon = myPokemon[Id];
+
+    // if (!responsePokemon = myPokemon[Id]) {
+    //     responsePokemon.status = 404;
+    //     response.send('Not Found');
+    //     return;
+    // }
+
+    response.json(responsePokemon);
+
+})
+
+// querey param example
+router.post('/', function (request, response) {
+    const pokemonName = request.query.name;
+
+    if (pokemonName) {
+        const matchingPokemon = []
+        const pokemonList = Object.values(myPokemon)
+
+        for (let i = 0; i < pokemonList.length; i++) {
+            const pokemon = pokemonList[i];
+            if (pokemonName === pokemon.name) {
+                matchingPokemon.push(pokemon);
+            }
+        }
+    }
 })
 
 // install nodemon (https://alecktos.medium.com/intellij-debugging-with-nodemon-4ebd121b18f1):
