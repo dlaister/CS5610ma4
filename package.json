@@ -1,0 +1,15 @@
+{
+  "name": "miniassignment7",
+  "version": "1.0.0",
+  "description": "Mini Assignment 7 for CS 5610",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hunter J",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "uuid": "^8.3.2"
+  }
+}
