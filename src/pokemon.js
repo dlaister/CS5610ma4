@@ -43,3 +43,11 @@ router.delete('/:pokemonId', function(req, res) {
 })
 
 module.exports = router;
+
+// (/url here, function that you define here)
+app.post('/', function(request,response){
+    response.send("some text here")
+})
+
+// install nodemon (https://alecktos.medium.com/intellij-debugging-with-nodemon-4ebd121b18f1):
+// npx nodemon --inspect app.js
