@@ -11,10 +11,7 @@ console.log(`My name is ${name}`)
 // note that it will reset every time you restart your server
 // updated example to look like class example, more readable
 const myPokemon = [{
-    id: "fc10b559-872c-43cd-bad2-f02e2e0a2d58",
-    name: "Pikachu",
-    health: 10,
-    level: 1
+    id: "fc10b559-872c-43cd-bad2-f02e2e0a2d58", name: "Pikachu", health: 10, level: 1
 }];
 
 // URL for postman get req: http://localhost:8000/api/pokemon/
@@ -23,11 +20,11 @@ router.get('/', function (req, res) {
     // return all pokemon
     console.log(`Here is your Pokemon inventory: ${JSON.stringify(myPokemon)}`);
 
-    // Serverside response code
+    // Serverside response code, OK
     res.status(200).json(myPokemon);
 });
 
-// TODO -- post
+// URL for postman post req: http://localhost:8000/api/pokemon/
 // Add entry to the list
 router.post('/', (req, res) => {
     // if the pokemon name already exists in the list, return an error
@@ -36,13 +33,62 @@ router.post('/', (req, res) => {
     // randomly generate a health between 10 and 100, inclusive, if none is given
     // insert your pokemon into the myPokemon list
     // return a 200
+    const {name, health, level} = req.body;
+
+    // Check if the Pokemon name already exists in the list
+    const existingPokemon = myPokemon.find(function (pokemon) {
+        return pokemon.name.toLowerCase() === name.toLowerCase();
+    });
+
+    if (existingPokemon) {
+        // If the Pokemon already exists, return an error
+        return res.status(400).json({error: `The Pokemon already exists: ${name}`});
+    }
+
+    // Generate an id using UUID
+    const newId = uuid();
+
+    // Generate level between 1 and 10, inclusive, if none is given
+    const newLevel = level || Math.floor(Math.random() * 10) + 1;
+
+    // Generate health between 10 and 100, inclusive, if none is given
+    const newHealth = health || Math.floor(Math.random() * 91) + 10;
+
+    // Create the new Pokemon object
+    const newPokemon = {
+        id: newId, name, health: newHealth, level: newLevel
+    };
+
+    // Insert your Pokemon into the myPokemon list
+    myPokemon.push(newPokemon);
+
+    console.log(`Added new Pokemon: ${JSON.stringify(newPokemon)}`);
+
+    // Serverside response code, CREATED
+    res.status(201).json(newPokemon);
 });
 
-// TODO -- get
+
+// URL for postman get req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
 // Fetch entry from the list
 router.get('/:pokemonId', function (req, res) {
     // return pokemon if one is found matching the pokemonId
     // return a 404 if no pokemon matches that pokemonId
+    const pokemonId = req.params.pokemonId;
+
+    // Find the Pokemon with the given ID
+    const pokemon = myPokemon.find(p => p.id === pokemonId);
+
+    // If no Pokemon is found, return a 404
+    if (!pokemon) {
+        console.log(`No Pokemon found with ID: ${pokemonId}`);
+
+        // Serverside response code, ERROR
+        return res.status(404).json({error: `No Pokemon found with ID: ${pokemonId}`});
+    }
+
+    // Serverside response code, OK
+    res.status(200).json(pokemon);
 });
 
 // URL for postman put req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
@@ -55,7 +101,7 @@ router.put('/:pokemonId', function (req, res) {
     const updatedData = req.body;
 
     // Find Pokemon by Id using traditional function syntax
-    const pokemon = myPokemon.find(function(pokemon) {
+    const pokemon = myPokemon.find(function (pokemon) {
         return pokemon.id === pokemonId;
     });
 
@@ -63,8 +109,8 @@ router.put('/:pokemonId', function (req, res) {
     if (!pokemon) {
         console.log(`No Pokemon found with ID: ${pokemonId}`);
 
-        // Serverside response code
-        return res.status(404).json({ error: `No Pokemon found with ID: ${pokemonId}` });
+        // Serverside response code, ERROR
+        return res.status(404).json({error: `No Pokemon found with ID: ${pokemonId}`});
     }
 
     // Update Id with data
@@ -75,7 +121,7 @@ router.put('/:pokemonId', function (req, res) {
     pokemon.type = updatedData.type || pokemon.type;
 
 
-    // Serverside response code
+    // Serverside response code, OK
     res.status(200).json(pokemon);
 });
 
@@ -99,7 +145,7 @@ router.delete('/:pokemonId', function (req, res) {
         console.log(`No Pokemon found with ID: ${pokemonId}`);
     }
 
-    // Serverside response code
+    // Serverside response code, OK
     res.status(200).json({message: "Pokemon deleted (if existed) from your Pokemon inventory"});
 });
 
