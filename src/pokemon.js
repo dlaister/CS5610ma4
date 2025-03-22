@@ -69,7 +69,7 @@ router.post('/', (req, res) => {
 });
 
 
-// URL for postman get req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
+// URL for postman get req: http://localhost:8000/api/pokemon/{Id to get (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
 // Fetch entry from the list
 router.get('/:pokemonId', function (req, res) {
     // return pokemon if one is found matching the pokemonId
@@ -86,12 +86,13 @@ router.get('/:pokemonId', function (req, res) {
         // Serverside response code, ERROR
         return res.status(404).json({error: `No Pokemon found with ID: ${pokemonId}`});
     }
+    console.log(`Pokemon found with ID: ${pokemonId}, Info: ${JSON.stringify(pokemon)}`);
 
     // Serverside response code, OK
     res.status(200).json(pokemon);
 });
 
-// URL for postman put req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
+// URL for postman put req: http://localhost:8000/api/pokemon/{Id to put (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
 // Update entry from the list
 router.put('/:pokemonId', function (req, res) {
     // update the pokemon matching the pokemonId
@@ -120,6 +121,7 @@ router.put('/:pokemonId', function (req, res) {
     // Added field for practice
     pokemon.type = updatedData.type || pokemon.type;
 
+    console.log('Updated Pokemon:', pokemon);
 
     // Serverside response code, OK
     res.status(200).json(pokemon);
