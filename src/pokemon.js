@@ -17,10 +17,14 @@ const myPokemon = [{
     level: 1
 }];
 
+// TODO -- get
 router.get('/', function (req, res) {
     // return all pokemon
+    console.log(`Here are all your Pokemon: ${JSON.stringify(myPokemon)}`);
+    res.status(200).json(myPokemon);
 });
 
+// TODO -- post
 // Add entery to the list
 router.post('/', (req, res) => {
     // if the pokemon name already exists in the list, return an error
@@ -31,12 +35,14 @@ router.post('/', (req, res) => {
     // return a 200
 });
 
+// TODO -- get
 // Fetch entry from the list
 router.get('/:pokemonId', function (req, res) {
     // return pokemon if one is found matching the pokemonId
     // return a 404 if no pokemon matches that pokemonId
 });
 
+// TODO -- put
 // Update entry from the list
 router.put('/:pokemonId', function (req, res) {
     // update the pokemon matching the pokemonId
@@ -60,7 +66,7 @@ router.delete('/:pokemonId', function (req, res) {
         console.log(`No Pokemon found with ID: ${pokemonId}`);
     }
 
-    res.status(200).json({ message: "Pokemon deleted (if existed)" });
+    res.status(200).json({message: "Pokemon deleted (if existed)"});
 });
 
 module.exports = router;
