@@ -17,15 +17,18 @@ const myPokemon = [{
     level: 1
 }];
 
-// TODO -- get
+// URL for postman get req: http://localhost:8000/api/pokemon/
+// Get all entries from the list
 router.get('/', function (req, res) {
     // return all pokemon
-    console.log(`Here are all your Pokemon: ${JSON.stringify(myPokemon)}`);
+    console.log(`Here is your Pokemon inventory: ${JSON.stringify(myPokemon)}`);
+
+    // Serverside response code
     res.status(200).json(myPokemon);
 });
 
 // TODO -- post
-// Add entery to the list
+// Add entry to the list
 router.post('/', (req, res) => {
     // if the pokemon name already exists in the list, return an error
     // randomly generate an id using UUID ["uuid()"]
@@ -42,35 +45,65 @@ router.get('/:pokemonId', function (req, res) {
     // return a 404 if no pokemon matches that pokemonId
 });
 
-// TODO -- put
+// URL for postman put req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
 // Update entry from the list
 router.put('/:pokemonId', function (req, res) {
     // update the pokemon matching the pokemonId
     // based on the req body
-    // return a 404 if no pokemon matches that pokemonId  
-})
+    // return a 404 if no pokemon matches that pokemonId
+    const pokemonId = req.params.pokemonId;
+    const updatedData = req.body;
 
+    // Find Pokemon by Id using traditional function syntax
+    const pokemon = myPokemon.find(function(pokemon) {
+        return pokemon.id === pokemonId;
+    });
+
+    // Pokemon doesn't exist
+    if (!pokemon) {
+        console.log(`No Pokemon found with ID: ${pokemonId}`);
+
+        // Serverside response code
+        return res.status(404).json({ error: `No Pokemon found with ID: ${pokemonId}` });
+    }
+
+    // Update Id with data
+    pokemon.name = updatedData.name || pokemon.name;
+    pokemon.health = updatedData.health || pokemon.health;
+    pokemon.level = updatedData.level || pokemon.level;
+    // Added field for practice
+    pokemon.type = updatedData.type || pokemon.type;
+
+
+    // Serverside response code
+    res.status(200).json(pokemon);
+});
+
+// URL for postman delete req: http://localhost:8000/api/pokemon/{Id to delete (i.e.: fc10b559-872c-43cd-bad2-f02e2e0a2d58)}
 // Delete entry from the list
 router.delete('/:pokemonId', function (req, res) {
     // delete pokemon if pokemonId matches the id of one
     // return 200 even if no pokemon matches that Id
     const pokemonId = req.params.pokemonId;
+    // Find Pokemon by Id
     const index = myPokemon.findIndex(function (pokemon) {
         return pokemon.id === pokemonId;
     });
 
+    // Logic for found/not found
     if (index !== -1) {
-        console.log(`Deleting Pokemon with ID: ${pokemonId}`);
+        console.log(`Deleted Pokemon ID: ${pokemonId}`);
+        // Remove Pokemon
         myPokemon.splice(index, 1);
     } else {
         console.log(`No Pokemon found with ID: ${pokemonId}`);
     }
 
-    res.status(200).json({message: "Pokemon deleted (if existed)"});
+    // Serverside response code
+    res.status(200).json({message: "Pokemon deleted (if existed) from your Pokemon inventory"});
 });
 
 module.exports = router;
-
 
 
 // MY NOTES, THESE CAN BE IGNORED.
